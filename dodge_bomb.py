@@ -28,6 +28,21 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
         pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
         bb_imgs.append(bb_img)
     return bb_imgs, bb_accs
+def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
+    img0 = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)  # 左向き（デフォルト）
+    img1 = pg.transform.flip(img0, True, False)  # 右向き（反転）
+    
+    return {
+        (0, 0): img0,
+        (-5, 0): img0,  
+        (+5, 0): img1,  
+        (0, -5): pg.transform.rotozoom(img1, 90, 1.0),  
+        (0, +5): pg.transform.rotozoom(img1, -90, 1.0), 
+        (+5, -5): pg.transform.rotozoom(img1, 45, 1.0), 
+        (+5, +5): pg.transform.rotozoom(img1, -45, 1.0),
+        (-5, -5): pg.transform.rotozoom(img0, -45, 1.0),
+        (-5, +5): pg.transform.rotozoom(img0, 45, 1.0), 
+    }
 def gameover(screen: pg.Surface) -> None:
     black_sfc = pg.Surface((WIDTH, HEIGHT))
     black_sfc.set_alpha(128)
@@ -57,7 +72,8 @@ def main():
 
 
     bg_img = pg.image.load("fig/pg_bg.jpg")    
-    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
+    kk_imgs = get_kk_imgs()
+    kk_img = kk_imgs[(0, 0)]
     kk_rct = kk_img.get_rect()
     kk_rct.center = 300, 200
 
@@ -84,6 +100,7 @@ def main():
         kk_rct.move_ip(sum_mv)
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
+        kk_img = kk_imgs[tuple(sum_mv)]
         screen.blit(kk_img, kk_rct)
 
         avx = vx * bb_accs[min(tmr//500, 9)]
@@ -91,7 +108,7 @@ def main():
         bb_img = bb_imgs[min(tmr//500, 9)]
         bb_rct.width, bb_rct.height = bb_img.get_rect().width, bb_img.get_rect().height
         bb_rct.move_ip(avx, avy)
-        
+
         yoko, tate = check_bound(bb_rct)
         if not yoko: 
             vx *= -1
