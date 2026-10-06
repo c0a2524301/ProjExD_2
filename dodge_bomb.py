@@ -29,19 +29,19 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
         bb_imgs.append(bb_img)
     return bb_imgs, bb_accs
 def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
-    img0 = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)  # 左向き（デフォルト）
-    img1 = pg.transform.flip(img0, True, False)  # 右向き（反転）
+    img0 = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9) 
+    img1 = pg.transform.flip(img0, True, False)  
     
     return {
-        (0, 0): img0,
-        (-5, 0): img0,  
-        (+5, 0): img1,  
-        (0, -5): pg.transform.rotozoom(img1, 90, 1.0),  
-        (0, +5): pg.transform.rotozoom(img1, -90, 1.0), 
-        (+5, -5): pg.transform.rotozoom(img1, 45, 1.0), 
-        (+5, +5): pg.transform.rotozoom(img1, -45, 1.0),
-        (-5, -5): pg.transform.rotozoom(img0, -45, 1.0),
-        (-5, +5): pg.transform.rotozoom(img0, 45, 1.0), 
+        (0, 0): img0,  # 停止
+        (-5, 0): img0,  # 左
+        (+5, 0): img1,  # 右
+        (0, -5): pg.transform.rotozoom(img1, 90, 1.0),  # 上
+        (0, +5): pg.transform.rotozoom(img1, -90, 1.0), # 下
+        (+5, -5): pg.transform.rotozoom(img1, 45, 1.0), # 右上
+        (+5, +5): pg.transform.rotozoom(img1, -45, 1.0),# 右下
+        (-5, -5): pg.transform.rotozoom(img0, -45, 1.0),# 左上
+        (-5, +5): pg.transform.rotozoom(img0, 45, 1.0), # 左下
     }
 def gameover(screen: pg.Surface) -> None:
     black_sfc = pg.Surface((WIDTH, HEIGHT))
